@@ -1,5 +1,13 @@
 # Action1 gateway acceptance
 
+## Live dashboard recheck: 2026-10-16
+
+- After the user updated the Action1 client secret in 1Password, a fresh launch of the saved NA-2 registration discovered all ten tools and passed the authenticated read-only organization check. The pre-existing chat MCP process still returned OAuth HTTP 400; the new dashboard launches its own fresh registered process to load current credentials.
+- Complete organization discovery returned one accessible organization. A bounded ten-asset read passed. The live API supplies nested numeric `missing_updates.critical/other` and `vulnerabilities.critical/other` summaries; the dashboard mapping supports these plus the original flat CSV columns.
+- The local dashboard successfully loaded the returned inventory through MCP and rendered vulnerability, patch, connection and operating-system summaries. Browser review confirmed the existing layout renders with live data. No credentials or tenant records are persisted by the live bridge.
+- All thirteen automated tests pass, including the eight original gateway tests and dashboard coverage for nested summary mapping, unavailable values, CSV safety, Host/Origin/session checks, read-only routes, selected organization scope, continuation and sanitized errors.
+- The local bridge is served on loopback. The previous static Site has not been republished: static hosting cannot launch the local stdio/1Password process. Report rows, report errors and deployment routes were not exercised in this dashboard check and remain unvalidated for NA-2.
+
 ## Setup recheck: 2026-10-15
 
 Current region: **NA-2**, explicitly confirmed by the user. API base: `https://app.na-2.action1.com/api/3.0`. This supersedes the earlier EU selection; previous EU results below do not validate NA-2.

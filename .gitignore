@@ -5,3 +5,4 @@ reports/
 action1-asset-report-*.csv
 action1-asset-report-*.md
 dashboard-package.tar.gz
+dashboard/dist/data.js

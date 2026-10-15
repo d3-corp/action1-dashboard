@@ -31,6 +31,10 @@ The script resolves executable and workspace paths, registers `action1`, and set
 
 Configure other MCP clients to launch `op run --environment <environment-id> -- node <absolute-path-to-src/server.mjs>`, with the confirmed API base in their non-secret environment configuration. This server uses local stdio.
 
+## Local dashboard
+
+Run `npm run dashboard` and open `http://127.0.0.1:8765` for the existing Action1 Insights dashboard populated through the registered MCP gateway. It uses 1Password injection from the saved launch, supports organization selection, refresh and bounded continuation, and keeps tenant records in memory. See [dashboard setup and limitations](dashboard/README.md).
+
 ## Tools
 
 | Tool | Purpose |

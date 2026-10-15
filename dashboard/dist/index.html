@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <!--dashboard-session-->
+  <title>Action1 • Asset & vulnerability dashboard</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside>
+    <div class="brand"><span class="logo">a1</span> Action1 <small>INSIGHTS</small></div>
+    <p class="navlabel">WORKSPACE</p>
+    <button class="nav active" data-view="all">◫ &nbsp; Asset overview</button>
+    <button class="nav" data-view="vulnerable">◇ &nbsp; Vulnerabilities</button>
+    <button class="nav" data-view="updates">↻ &nbsp; Missing updates</button>
+    <div class="asidefoot"><span class="dot"></span><span id="connection-label">Read-only reporting</span><br><small>NA-2 · Action1</small></div>
+  </aside>
+  <main>
+    <header>
+      <div><span class="eyebrow">ENDPOINT INTELLIGENCE</span><h1 id="title">Asset overview</h1><p>Know your estate. Focus on the endpoints that need attention.</p></div>
+      <div class="actions"><label class="button" for="import">↑ Import CSV</label><input type="file" id="import" accept=".csv" hidden><button id="export" disabled>↓ Export results</button></div>
+    </header>
+    <section class="organization-picker" aria-label="Organization scope">
+      <label for="organization">Organization</label><select id="organization" aria-describedby="organization-note"><option value="">Connecting…</option></select>
+      <span id="organization-note">Choose the organization whose inventory you want to view.</span>
+    </section>
+    <div class="source" id="source" role="status"><span class="dot"></span><div><b id="source-name">Connecting to Action1</b><span id="source-note">Loading the gateway connection.</span></div><button id="refresh">↻ Refresh data</button></div>
+    <section id="stats" class="stats" aria-label="Filtered inventory metrics"></section>
+    <section class="charts">
+      <article><div class="sectionhead"><h2>Vulnerability exposure</h2><span>Endpoint findings</span></div><div id="exposure"></div><p id="coverage" class="caption">Counts are reported findings across endpoints, not unique CVEs.</p></article>
+      <article><div class="sectionhead"><h2>Connection status</h2><span>Endpoint records</span></div><div id="connections"></div></article>
+      <article><div class="sectionhead"><h2>Operating systems</h2><span>Endpoint records</span></div><div id="systems"></div></article>
+    </section>
+    <section class="inventory" id="inventory" aria-busy="false">
+      <div class="sectionhead"><div><h2>Endpoint inventory</h2><p id="count"></p></div><button id="clear">Clear filters</button></div>
+      <div class="filters"><input id="search" aria-label="Search assets" placeholder="Search name, user, IP, serial…"><select id="status" aria-label="Connection status"><option value="">All statuses</option></select><select id="os" aria-label="Operating system"><option value="">All operating systems</option></select><select id="risk" aria-label="Risk filter"><option value="">All findings</option><option value="critical">Critical vulnerabilities</option><option value="vulnerable">Any vulnerabilities</option><option value="updates">Missing updates</option><option value="reboot">Reboot required</option></select></div>
+      <div class="tablewrap"><table><thead><tr><th><button data-sort="name">Asset ↕</button></th><th><button data-sort="status">Status ↕</button></th><th><button data-sort="OS">Operating system ↕</button></th><th><button data-sort="critical_vulnerabilities">Critical ↕</button></th><th><button data-sort="other_vulnerabilities">Other findings ↕</button></th><th><button data-sort="total_updates">Updates ↕</button></th><th><button data-sort="last_seen">Last seen ↕</button></th></tr></thead><tbody id="rows"></tbody></table></div>
+      <div class="pagination"><span id="page-info"></span><div><button id="load-more" hidden>Load more from Action1</button><button id="prev">← Previous</button><button id="next">Next →</button></div></div>
+    </section>
+    <footer>Metrics reflect the selected organization and loaded endpoint records. Filters apply to all charts and metrics. Duplicate names are retained by endpoint ID. Retrieval time is not endpoint observation time. Missing counts remain unknown; last-seen values retain their source format.</footer>
+  </main>
+  <dialog id="detail"><div class="sectionhead"><h2 id="detail-title"></h2><button id="close" aria-label="Close asset details">✕</button></div><div id="detail-body"></div></dialog>
+  <div id="toast" role="status"></div><script type="module" src="app.js"></script>
+</body>
+</html>
+
