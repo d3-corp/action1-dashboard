@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node src/server.mjs",
+    "start:http": "node src/http.mjs",
     "dashboard": "node dashboard/server.mjs",
     "test": "node --test"
   },

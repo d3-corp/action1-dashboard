@@ -1,5 +1,19 @@
 # Action1 gateway acceptance
 
+## Private HTTP / Cloudflare preparation: 2026-10-19
+
+### Account follow-up
+
+- User selected the `d3hl` Cloudflare team. The browser is signed in, but its account selector lists one account and that account shows Zero Trust onboarding. Selecting the displayed Free plan led to an activation checkout requiring billing details and consent to usage charges. Checkout was not submitted; no subscription, team, tunnel, portal or policy was created.
+- The 1Password MCP connection now succeeds. Variable-name inspection found `CLIENT_ID`, `CLIENT_SECRET`, and `ACTION1_HTTP_TOKE` (missing the final N), rather than the required `ACTION1_HTTP_TOKEN`. No secret value was retrieved or modified. A name correction is pending, along with the approved portal email/group and access to the intended existing team or completion of account activation by the user.
+
+- Added a separate stateless Streamable HTTP entry point using the installed MCP SDK. The existing stdio launch and dashboard are unchanged. The HTTP origin requires a separate strong bearer token and explicit organization scope, binds only to loopback or a specific RFC1918 IPv4 address, validates Host, rejects browser Origin requests, and limits request size/concurrency. One shared Action1 client retains pacing and token caching across requests.
+- All seventeen tests pass, including the original stdio/in-memory suite and real HTTP client discovery, origin authentication, configured organization restrictions, continuation, body limits and redacted errors. The new PowerShell 7 launcher parses successfully and reuses the saved 1Password Environment/account IDs without embedding machine paths or credentials.
+- A fresh registered 1Password launch passed temporary loopback HTTP acceptance: ten tools discovered, authenticated organization discovery succeeded with one organization and no truncation, and an unauthenticated request returned HTTP 401. The acceptance token existed only in process memory; no persistent origin token or tenant records were written.
+- Installed the official `Cloudflare.cloudflared` WinGet package (2026.10.1); WinGet verified the installer hash. No tunnel, route, Access policy, portal, service or ChatGPT connection has been created. Cloudflare browser access is at the sign-in page and the intended account/team and allowed identities are not yet supplied.
+- The 1Password MCP connection request was blocked with `MCP tool call requires approval, but approval policy is never`. Existing `op run` runtime injection still worked for bounded acceptance; no Environment variable was changed. A separate concealed `ACTION1_HTTP_TOKEN` must be supplied in the existing Environment through approved access.
+- Cloudflare private routing, portal OAuth/user policy, denied-user checks and a real ChatGPT tool call remain unvalidated. Follow `CLOUDFLARE.md`; local success is not end-to-end portal acceptance. No Action1 deployments were initiated, modified or stopped.
+
 ## Live dashboard recheck: 2026-10-16
 
 - After the user updated the Action1 client secret in 1Password, a fresh launch of the saved NA-2 registration discovered all ten tools and passed the authenticated read-only organization check. The pre-existing chat MCP process still returned OAuth HTTP 400; the new dashboard launches its own fresh registered process to load current credentials.

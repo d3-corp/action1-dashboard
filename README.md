@@ -35,6 +35,10 @@ Configure other MCP clients to launch `op run --environment <environment-id> -- 
 
 Run `npm run dashboard` and open `http://127.0.0.1:8765` for the existing Action1 Insights dashboard populated through the registered MCP gateway. It uses 1Password injection from the saved launch, supports organization selection, refresh and bounded continuation, and keeps tenant records in memory. See [dashboard setup and limitations](dashboard/README.md).
 
+## Private HTTP MCP and Cloudflare
+
+The optional `npm run start:http` entry point exposes the same ten read-only tools over stateless Streamable HTTP at `/mcp`. It requires an injected `ACTION1_HTTP_TOKEN`, an explicit `ACTION1_ORGANIZATION_IDS` allowlist, and the exact NA-2 base. It binds to loopback by default and can bind a specific private IPv4 interface for Cloudflare Tunnel. `./Start-Action1HttpGateway.ps1 -OrganizationId <confirmed-id>` reuses the registered 1Password Environment. See [Cloudflare setup and current status](CLOUDFLARE.md) for private routing, bearer origin authentication, portal OAuth, access policies and validation. This origin is not a standalone OAuth service for direct ChatGPT connections.
+
 ## Tools
 
 | Tool | Purpose |
