@@ -6,6 +6,12 @@ Action1 MCP gateway and local Action1 Insights dashboard for read-only report re
 
 Read `README.md` and `VALIDATION.md` fully before changing behavior. Read `dashboard/README.md` for dashboard work and `CLOUDFLARE.md` for HTTP or remote-access work.
 
+## Contract Master workflow
+
+Automated work arrives through the Contract Master workflow. Before planning or editing, explicitly read the issue and latest HANDOFF from Linear (project Action1 Dashboard), and the task's read-only Contract Master context bundle (verify its recorded source commit and digest) with the shared workflow, security and contract guidance inside it. Links alone do not load those files.
+
+Claude investigates and plans; DeepSeek implements and tests; Codex independently verifies, reviews and merges. Send results to the coordinator. Only the manager writes Linear. Humans handle escalations. Follow the task's allowed scope, acceptance criteria and required checks; the registered check is `test` (`npm ci --ignore-scripts && node --test`), offline and credential-free. Issues for this repository carry exactly one `repo:action1-dashboard` label. Live checks stay manual and outside automated tasks.
+
 ## Commands
 
 Use Node.js 22 or newer; Windows automation requires PowerShell 7. Run commands from the repository root.
