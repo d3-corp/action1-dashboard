@@ -68,6 +68,10 @@ Tokens are cached in memory and refreshed after expiry or one unauthorized respo
 
 This is a local server. Any remote hosting would additionally require authenticated transport, caller-specific authorization, and tenant isolation.
 
+## Requesting changes
+
+Automated work goes through the Contract Master workflow. File the issue in the Linear project **Action1 Dashboard** with exactly one `repo:action1-dashboard` label and a complete `contract-master` block. The registered check is `test` (`npm ci --ignore-scripts && node --test`), which is offline and credential-free; live checks stay manual and outside automated tasks. See [AGENTS.md](AGENTS.md) for the workflow, scope and boundaries.
+
 ## Sources and verification
 
 - [Action1 REST API reference](https://app.na-2.action1.com/apidocs/): reports and automation routes for the selected region.
