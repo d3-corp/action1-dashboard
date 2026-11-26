@@ -1,5 +1,11 @@
 # Action1 gateway acceptance
 
+## Collection tools: pending live check
+
+- `list_missing_updates`, `list_installed_apps` and `list_vulnerabilities` page `updates/{org}`, `apps/{org}/data` and `vulnerabilities/{org}`; automated tests use simulated responses only.
+- The bounded NA-2 live check is a manual human step and has not been run; record only counts, truncation and field names, never tenant records.
+- `scripts/validate-live.mjs`, `scripts/check-registered.mjs` and `scripts/check-http-live.mjs` still expect ten tools and will report a tool-count failure until a follow-up updates them; `CLOUDFLARE.md` portal tool approval must also enable the new tools explicitly.
+
 ## Private HTTP / Cloudflare preparation: 2026-10-19
 
 ### Account follow-up

@@ -33,6 +33,9 @@ export function createServer(client) {
   tool('get_deployment_status', 'Read deployment statuses for a scheduled automation.', { ...org, ...paging, automationId: id }, ({ organizationId, automationId, ...args }) => client.pages(`automations/schedules/${client.org(organizationId)}/${segment(automationId)}/deployment-statuses`, args));
   tool('get_deployment_results', 'Read per-asset results for a deployment instance.', { ...org, ...paging, instanceId: id }, ({ organizationId, instanceId, ...args }) => client.pages(`automations/instances/${client.org(organizationId)}/${segment(instanceId)}/endpoint-results`, args));
   tool('get_deployment_details', 'Read detailed deployment results for one asset in an instance.', { ...org, instanceId: id, endpointId: id }, a => client.get(`automations/instances/${client.org(a.organizationId)}/${segment(a.instanceId)}/endpoint-results/${segment(a.endpointId)}/details`));
+  tool('list_missing_updates', 'Read missing Windows and application updates with severity, SLA and version fields supplied by Action1. Truncation is explicit.', { ...org, ...paging }, ({ organizationId, ...args }) => client.pages(`updates/${client.org(organizationId)}`, args));
+  tool('list_installed_apps', 'Read installed application rows (name, version, vendor, platform, endpoints, update status) supplied by Action1. Truncation is explicit.', { ...org, ...paging }, ({ organizationId, ...args }) => client.pages(`apps/${client.org(organizationId)}/data`, args));
+  tool('list_vulnerabilities', 'Read vulnerabilities with CVE, CVSS, affected endpoint count and remediation fields supplied by Action1. Truncation is explicit.', { ...org, ...paging }, ({ organizationId, ...args }) => client.pages(`vulnerabilities/${client.org(organizationId)}`, args));
   return server;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

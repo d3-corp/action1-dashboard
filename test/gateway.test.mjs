@@ -63,7 +63,13 @@ test('MCP tools route deployment and report calls and reject invalid inputs', as
   const [a, b] = InMemoryTransport.createLinkedPair();
   await server.connect(a); await client.connect(b);
   try {
-    const tools = await client.listTools(); assert.equal(tools.tools.length, 10);
+    const tools = await client.listTools(); assert.equal(tools.tools.length, 13);
+    assert.deepEqual(tools.tools.map(tool => tool.name).sort(), [
+      'list_organizations', 'list_assets', 'get_asset_status', 'list_reports', 'generate_report',
+      'get_report_errors', 'list_deployments', 'get_deployment_status', 'get_deployment_results',
+      'get_deployment_details', 'list_missing_updates', 'list_installed_apps', 'list_vulnerabilities',
+    ].sort());
+    assert.ok(tools.tools.every(tool => tool.annotations.readOnlyHint === true && tool.annotations.destructiveHint === false));
     const category = await client.callTool({ name: 'list_reports', arguments: { categoryId: 'category/a' } });
     assert.ok(!category.isError); assert.ok(paths.some(p => p.includes('/reports/category%2Fa/children')));
     const report = await client.callTool({ name: 'generate_report', arguments: { organizationId: 'org', reportId: 'report', format: 'csv' } });
@@ -74,9 +80,51 @@ test('MCP tools route deployment and report calls and reject invalid inputs', as
     const invalid = await client.callTool({ name: 'list_assets', arguments: { organizationId: 'org', maxPages: 0 } }); assert.equal(invalid.isError, true);
   } finally { await client.close(); await server.close(); }
 });
+test('MCP collection tools page missing updates, installed apps and vulnerabilities within organization scope', async () => {
+  const paths = [];
+  const { client: api } = fixture((url, init) => { paths.push({ url: new URL(String(url)), init }); return response({ items: [{ id: 'row' }] }); }, { organizations: ['org'] });
+  const server = createServer(api);
+  const client = new Client({ name: 'test-client', version: '1.0' });
+  const [a, b] = InMemoryTransport.createLinkedPair();
+  await server.connect(a); await client.connect(b);
+  try {
+    const updates = await client.callTool({ name: 'list_missing_updates', arguments: { organizationId: 'org' } });
+    assert.ok(!updates.isError);
+    assert.deepEqual(JSON.parse(updates.content[0].text), { items: [{ id: 'row' }], truncated: false });
+    assert.ok(paths.some(({ url }) => url.pathname.endsWith('/api/3.0/updates/org') && url.searchParams.get('from') === '0' && url.searchParams.get('limit') === '100'));
+    const apps = await client.callTool({ name: 'list_installed_apps', arguments: { organizationId: 'org' } });
+    assert.ok(!apps.isError);
+    assert.deepEqual(JSON.parse(apps.content[0].text), { items: [{ id: 'row' }], truncated: false });
+    assert.ok(paths.some(({ url }) => url.pathname.endsWith('/api/3.0/apps/org/data')));
+    const vulnerabilities = await client.callTool({ name: 'list_vulnerabilities', arguments: { organizationId: 'org' } });
+    assert.ok(!vulnerabilities.isError);
+    assert.deepEqual(JSON.parse(vulnerabilities.content[0].text), { items: [{ id: 'row' }], truncated: false });
+    assert.ok(paths.some(({ url }) => url.pathname.endsWith('/api/3.0/vulnerabilities/org')));
+    for (const name of ['list_missing_updates', 'list_installed_apps', 'list_vulnerabilities']) {
+      const before = paths.length;
+      assert.equal((await client.callTool({ name, arguments: { organizationId: 'other' } })).isError, true);
+      assert.ok(!paths.slice(before).some(({ url }) => url.href.includes('/other')));
+      assert.equal((await client.callTool({ name, arguments: { organizationId: 'org', maxPages: 0 } })).isError, true);
+      assert.equal((await client.callTool({ name, arguments: { organizationId: '..' } })).isError, true);
+    }
+    assert.ok(paths.every(({ url, init }) => (init.method === undefined || init.method === 'GET') && url.hostname === new URL(api.base).hostname));
+  } finally { await client.close(); await server.close(); }
+});
+test('collection tools report truncation and continuation explicitly', async () => {
+  const { client: api } = fixture(() => response({ items: [{ id: 'row' }], next_page: 'next' }), { organizations: ['org'] });
+  const server = createServer(api);
+  const client = new Client({ name: 'test-client', version: '1.0' });
+  const [a, b] = InMemoryTransport.createLinkedPair();
+  await server.connect(a); await client.connect(b);
+  try {
+    const result = await client.callTool({ name: 'list_vulnerabilities', arguments: { organizationId: 'org', maxPages: 1, from: 5 } });
+    assert.ok(!result.isError);
+    assert.deepEqual(JSON.parse(result.content[0].text), { items: [{ id: 'row' }], truncated: true, nextFrom: 6 });
+  } finally { await client.close(); await server.close(); }
+});
 test('stdio entry point starts and advertises tools without credentials', async () => {
   const client = new Client({ name: 'stdio-test', version: '1' });
   const transport = new StdioClientTransport({ command: process.execPath, args: [fileURLToPath(new URL('../src/server.mjs', import.meta.url))] });
-  try { await client.connect(transport); assert.equal((await client.listTools()).tools.length, 10); }
+  try { await client.connect(transport); assert.equal((await client.listTools()).tools.length, 13); }
   finally { await client.close(); }
 });
