@@ -69,14 +69,14 @@ test('HTTP requires origin authentication and rejects cross-origin requests, for
   assert.equal(calls.length, 0);
 });
 
-test('real Streamable HTTP client discovers ten read-only tools, shares token cache, and enforces organization scope', async t => {
+test('real Streamable HTTP client discovers thirteen read-only tools, shares token cache, and enforces organization scope', async t => {
   const { url, calls } = await start(t);
   const mcp = new Client({ name: 'http-regression', version: '1.0' });
   const transport = new StreamableHTTPClientTransport(new URL(url + '/mcp'), { requestInit: { headers: authorization } });
   try {
     await mcp.connect(transport);
     const tools = (await mcp.listTools()).tools;
-    assert.equal(tools.length, 10);
+    assert.equal(tools.length, 13);
     assert.ok(tools.every(tool => tool.annotations.readOnlyHint && !tool.annotations.destructiveHint));
     const orgs = await mcp.callTool({ name: 'list_organizations', arguments: { limit: 10, maxPages: 1 } });
     assert.deepEqual(JSON.parse(orgs.content[0].text).items, [{ id: 'allowed' }]);

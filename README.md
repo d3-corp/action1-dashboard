@@ -37,7 +37,7 @@ Run `npm run dashboard` and open `http://127.0.0.1:8765` for the existing Action
 
 ## Private HTTP MCP and Cloudflare
 
-The optional `npm run start:http` entry point exposes the same ten read-only tools over stateless Streamable HTTP at `/mcp`. It requires an injected `ACTION1_HTTP_TOKEN`, an explicit `ACTION1_ORGANIZATION_IDS` allowlist, and the exact NA-2 base. It binds to loopback by default and can bind a specific private IPv4 interface for Cloudflare Tunnel. `./Start-Action1HttpGateway.ps1 -OrganizationId <confirmed-id>` reuses the registered 1Password Environment. See [Cloudflare setup and current status](CLOUDFLARE.md) for private routing, bearer origin authentication, portal OAuth, access policies and validation. This origin is not a standalone OAuth service for direct ChatGPT connections.
+The optional `npm run start:http` entry point exposes the same thirteen read-only tools over stateless Streamable HTTP at `/mcp`. It requires an injected `ACTION1_HTTP_TOKEN`, an explicit `ACTION1_ORGANIZATION_IDS` allowlist, and the exact NA-2 base. It binds to loopback by default and can bind a specific private IPv4 interface for Cloudflare Tunnel. `./Start-Action1HttpGateway.ps1 -OrganizationId <confirmed-id>` reuses the registered 1Password Environment. See [Cloudflare setup and current status](CLOUDFLARE.md) for private routing, bearer origin authentication, portal OAuth, access policies and validation. This origin is not a standalone OAuth service for direct ChatGPT connections.
 
 ## Tools
 
@@ -53,6 +53,9 @@ The optional `npm run start:http` entry point exposes the same ten read-only too
 | get_deployment_status | Per-asset scheduled automation statuses |
 | get_deployment_results | Per-asset results for one executed instance |
 | get_deployment_details | Detailed instance results for one asset |
+| list_missing_updates | Missing Windows and app updates with severity, SLA and version |
+| list_installed_apps | Installed application rows per organization |
+| list_vulnerabilities | Vulnerabilities with CVE, CVSS, endpoint count and remediation status |
 
 Example requests: “List assets in organization X”, “Generate report Y in organization X as CSV”, “Show endpoint results for deployment instance Z in organization X.” Discover IDs before requesting a report or instance.
 
